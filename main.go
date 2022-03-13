@@ -4,13 +4,13 @@ import (
 	"log"
 	"net"
 
-	"github.com/bewannabe96/carving-pilot/service"
-	"github.com/bewannabe96/daytrip-datapipeline-grpc-idl/gen/go/carving"
+	idl "github.com/ourspaceapp/carving/idl"
+	"github.com/ourspaceapp/carving/server"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	const host = "localhost:3000"
+	const host = ":3000"
 
 	listener, err := net.Listen("tcp", host)
 	if err != nil {
@@ -21,8 +21,9 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	carving.RegisterSessionServiceServer(grpcServer, &service.SessionServiceServer{})
-	carving.RegisterScreenServiceServer(grpcServer, &service.ScreenServiceServer{})
+	idl.RegisterSessionServiceServer(grpcServer, &server.SessionServiceServer{})
+	idl.RegisterUserServiceServer(grpcServer, &server.UserServiceServer{})
+	idl.RegisterEngagementServiceServer(grpcServer, &server.EngagementServiceServer{})
 
 	grpcServer.Serve(listener)
 }
